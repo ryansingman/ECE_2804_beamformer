@@ -4,7 +4,7 @@
 #include <cstring>
 #include <complex>
 
-#define NUM_BEAMS 17
+#define NUM_BEAMS 33
 #define NUM_PHONES 2         // number of microphones used
 #define NUM_FFT_POINTS 256
 

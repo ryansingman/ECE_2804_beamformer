@@ -1,13 +1,12 @@
 #include "beamformer.h"
 
 #include <cstdio>
-#include <iostream>
 
 #define SIGNAL_FREQ 1009
 #define SIGNAL_BIN 157           // corresponds to 1000 Hz signal for sampling rate 9600
-#define SIGNAL_AMP 10
+#define SIGNAL_AMP 1
 #define NUM_SIGNALS 1
-#define SIGNAL_ANGLE 90
+#define SIGNAL_ANGLE 45
 
 void generate_input_signal(elem_arr *elem_data) {
 
@@ -27,14 +26,24 @@ void display_power(power_arr *power) {
 
     float angle = 0;
 
-    printf("Displayed as Angle1 / Power1 || Angle2 / Power2 || ...\n");
-    printf("Beam powers for signal angle: %f\n", (float)SIGNAL_ANGLE);
-    for (int ii = 0; ii < (NUM_BEAMS-1); ++ii) {
-        angle = -90 + 180 * ((float)ii / (float)(NUM_BEAMS - 1));
-        printf("%0.2f / %0.2f || ", angle, (*power)[ii]);
+    // find max power
+    float max = 0;
+    for (int ii = 0; ii < NUM_BEAMS; ++ii) {
+        if ((*power)[ii] > max) max = (*power)[ii];
     }
-    printf("%0.2f / %0.2f\n", 90.0, (*power)[NUM_BEAMS -1]);
 
+    printf("Beam powers for signal angle: %f\n", (float)SIGNAL_ANGLE);
+    for (int jj = 0; jj < (NUM_BEAMS); ++jj) {
+        angle = -90 + 180 * ((float)jj / (float)(NUM_BEAMS - 1));
+        if ((*power)[jj] == max) {
+            printf("\033[1;34m");
+            printf("%0.2f / %0.2f\n", angle, (*power)[jj]);
+            printf("\033[0m");
+        }
+        else {        
+            printf("%0.2f / %0.2f\n", angle, (*power)[jj]);
+        }
+    }
 }
 
 int main(void) {
